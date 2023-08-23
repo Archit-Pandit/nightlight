@@ -8,7 +8,11 @@ public class LightInstantiator : MonoBehaviour
 
     [SerializeField] private Vector2 spawnBorders = new Vector2(100f, 100f);
 
+    [SerializeField] private int limit = 5;
+
     private WaitForSeconds spawnDelay = new WaitForSeconds(1f);
+
+    private Coroutine spawning = null;
 
     private List<GameObject> lightObjs = new List<GameObject>();
 
@@ -21,13 +25,20 @@ public class LightInstantiator : MonoBehaviour
         halfBorderX = spawnBorders.x / 2;
         halfBorderY = spawnBorders.y / 2;
 
-        StartCoroutine(SpawnLights(spawnDelay));
+        StartSpawning();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (lightObjs.Count >= limit)
+        {
+            StopSpawning();
+        }
+        else if (spawning == null)
+        {
+            StartSpawning();
+        }
     }
 
     private void OnDrawGizmos()
@@ -36,9 +47,23 @@ public class LightInstantiator : MonoBehaviour
         Gizmos.DrawWireCube(transform.position, spawnBorders);
     }
 
+    private void StartSpawning()
+    {
+        if (spawning != null) { StopCoroutine(spawning); }
+
+        spawning = StartCoroutine(SpawnLights(spawnDelay));
+    }
+
+    private void StopSpawning()
+    {
+        StopCoroutine(spawning);
+
+        //spawning = null;
+    }
+
     private IEnumerator SpawnLights(WaitForSeconds delay)
     {
-        while (lightObjs.Count < 100)
+        while (true)
         {
             float randomPointX = Random.Range(-halfBorderX, halfBorderX);
             float randomPointY = Random.Range(-halfBorderY, halfBorderY);

@@ -12,7 +12,7 @@ public class RopeDrawer : MonoBehaviour
 
     private LineRenderer line;
 
-    private PolygonCollider2D collider;
+    private PolygonCollider2D col;
 
     // Start is called before the first frame update
     void Start()
@@ -46,8 +46,6 @@ public class RopeDrawer : MonoBehaviour
         StopCoroutine(rope);
 
         CreateTriggerCollider();
-
-        Destroy(lineObj);
     }
 
     private IEnumerator StartDrawing()
@@ -57,7 +55,7 @@ public class RopeDrawer : MonoBehaviour
         lineObj.transform.position = Vector3.zero;
 
         line = lineObj.GetComponent<LineRenderer>();
-        collider = lineObj.GetComponent<PolygonCollider2D>();
+        col = lineObj.GetComponent<PolygonCollider2D>();
 
         line.positionCount = 0;
 
@@ -76,7 +74,7 @@ public class RopeDrawer : MonoBehaviour
     private void CreateTriggerCollider()
     {
         line.loop = true;
-        collider.SetPath(0, new Vector2[0]);
+        col.SetPath(0, new Vector2[0]);
 
         List<Vector2> colEdges = new List<Vector2>();
 
@@ -87,7 +85,7 @@ public class RopeDrawer : MonoBehaviour
             colEdges.Add(point);
         }
 
-        collider.SetPath(0, colEdges);
-        collider.enabled = true;
+        col.SetPath(0, colEdges);
+        col.enabled = true;
     }
 }

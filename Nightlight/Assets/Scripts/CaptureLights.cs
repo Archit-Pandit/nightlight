@@ -20,9 +20,11 @@ public class CaptureLights : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.gameObject.layer != lightLayer)
-        {
+        if (collision.gameObject.layer != lightLayer) { return; }
 
-        }
+        ScoreManager.Instance.AddScore(1);
+        Debug.Log("Captured light");
+
+        Destroy(collision.gameObject);
     }
 }
