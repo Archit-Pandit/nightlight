@@ -46,6 +46,7 @@ public class RopeDrawer : MonoBehaviour
         StopCoroutine(rope);
 
         CreateTriggerCollider();
+        lineObj.GetComponent<CaptureLights>().Capture();
     }
 
     private IEnumerator StartDrawing()
