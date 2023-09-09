@@ -15,6 +15,9 @@ public class CaptureLights : MonoBehaviour
 
     private AnimatorStateInfo state;
 
+    private int lightsCaptured = -1;
+    private int lightsDestroyed = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,9 +30,12 @@ public class CaptureLights : MonoBehaviour
     {
         state = animator.GetCurrentAnimatorStateInfo(0);
 
-        if (state.IsName("Fade") && state.normalizedTime > 1)
+        if (lightsDestroyed == lightsCaptured)
         {
-            Destroy(gameObject);
+            if (state.IsName("Fade") && state.normalizedTime > 1)
+            {
+                Destroy(gameObject);
+            }
         }
     }
 
@@ -38,9 +44,9 @@ public class CaptureLights : MonoBehaviour
         Collider2D collider = GetComponent<Collider2D>();
         List<Collider2D> lights = new List<Collider2D>();
 
-        Physics2D.OverlapCollider(collider, lightLayer, lights);
+        lightsCaptured = Physics2D.OverlapCollider(collider, lightLayer, lights);
 
-        ScoreManager.Instance.AddScore(lights.Count);
+        if (lightsCaptured == 0) { animator.Play("Fade"); return; }
 
         StartCoroutine(MoveLight(lights));
 
@@ -59,7 +65,7 @@ public class CaptureLights : MonoBehaviour
 
     private IEnumerator Translate(Transform lightTransform)
     {
-        while(Vector3.Distance(lightTransform.position, captureDestination) > 0.001f)
+        while (Vector3.Distance(lightTransform.position, captureDestination) > 0.001f)
         {
             var step = lightMoveSpeed * Time.deltaTime;
             lightTransform.position = Vector3.MoveTowards(lightTransform.position, captureDestination, step);
@@ -68,5 +74,8 @@ public class CaptureLights : MonoBehaviour
         }
 
         Destroy(lightTransform.gameObject);
+        
+        ScoreManager.Instance.AddScore(1);
+        lightsDestroyed++;
     }
 }
