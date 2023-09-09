@@ -42,3 +42,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Background
+    uniqueID: 2542622835
+    locked: 0
+  - name: Lights
+    uniqueID: 2467906233
+    locked: 0
+  - name: Jar
+    uniqueID: 261057785
+    locked: 0
